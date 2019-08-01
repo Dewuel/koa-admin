@@ -8,9 +8,10 @@ Software architecture description
 
 #### Installation
 
-1. xxxx
-2. xxxx
-3. xxxx
+1. git clone https://gitee.com/jarvanzx/koa-admin.git
+2. cd koa-admin
+3. npm run dev
+4. npm start
 
 #### Instructions
 
