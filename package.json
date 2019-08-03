@@ -11,7 +11,9 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "repository": "https://gitee.com/jarvanzx/koa-admin.git",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "koa": "^2.7.0",
     "koa-bodyparser": "^4.2.1",
     "koa-json": "^2.0.2",

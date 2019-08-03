@@ -9,13 +9,13 @@ class UserController{
    static async signup(ctx) {
     const {email,name,password,avatar} = ctx.request.body
     console.log(email,name,password,avatar);
-    let user = new User({
+    let user = {
       email: email,
       name: name,
       password: password,
       avatar: avatar
-    })
-    let result = await User.find({email: email})
+    }
+    let result = await User.find({email})
     if(result.length > 0){
       console.log(result)
       ctx.status = 412
@@ -24,7 +24,7 @@ class UserController{
         msg: '邮箱已被注册'
       }
     } else {
-      await user.save().then(res => {
+      await User.create(user).then(res => {
         console.log('res',res)
         ctx.status = 200
         ctx.body = {
