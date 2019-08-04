@@ -25,20 +25,26 @@ const UserSchema = new Schema({
     required: true,
     default: 1 // 1=>正常, 2=>异常
   },
-  createAt: {
-    type: Date,
-    default: Date.now()
-  },
-  updateAt: {
-    type: Date,
-    default: Date.now()
-  }
+  // createAt: {
+  //   type: Date,
+  //   default: Date.now()
+  // },
+  // updateAt: {
+  //   type: Date,
+  //   default: Date.now()
+  // }
+},{
+  // timestamps: {
+  //   createdAt: 'createTime',
+  //   updatedAt: 'updateTime',
+  // },
+  timestamps: true
 })
 
 UserSchema.pre('save', function(next){
   let user = this
   if(!user.isModified('password')) return next();
-  if(!user.isNew) return next()
+  // if(!user.isNew) return next()
   // 生产salt
   bcrypt.genSalt(SALT_WORK_FACTOR, function(err, salt){
     if(err) return next(err);

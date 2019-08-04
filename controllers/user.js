@@ -1,4 +1,5 @@
 const User = require('../models/user')
+const addToken = require('../utils/addToken')
 
 class UserController{
   /**
@@ -9,40 +10,13 @@ class UserController{
    static async signup(ctx) {
     const {email,name,password,avatar} = ctx.request.body
     console.log(email,name,password,avatar);
-    let user = {
-      email: email,
-      name: name,
-      password: password,
-      avatar: avatar
-    }
-    // let result = await User.find({email})
-    // if(result.length > 0){
-    //   console.log(result)
-    //   ctx.status = 412
-    //   ctx.body = {
-    //     code: 412,
-    //     msg: '邮箱已被注册'
-    //   }
-    // } else {
-    //   await User.create(user).then(res => {
-    //     // console.log('res',res)
-    //     ctx.status = 200
-    //     ctx.body = {
-    //       code: 200,
-    //       msg: '注册成功',
-    //       data: res
-    //     }
-    //   }).catch(err => {
-    //     console.log(err)
-    //   })
-    // }
-    await User.create(user).then(res => {
+    await User.create({email,name,password,avatar}).then(res => {
       // console.log('res',res)
       ctx.status = 200
       ctx.body = {
         code: 200,
         msg: '注册成功',
-        data: res
+        data: res,
       }
     }).catch(err => {
       console.log(err)
@@ -57,12 +31,13 @@ class UserController{
 
   static async signin(ctx){
     const {email,password} = ctx.request.body
-    let res = await User.findOne({email}, (err, res) => {
+    await User.findOne({email}, (err, res) => {
       if(err) throw(err)
       // User.comparePassword
       res.comparePassword(password, (err, isMatch) => {
         if(err) throw err
         if(isMatch){
+          let token = addToken(res)
           ctx.status = 200
           ctx.body = {
             code: 200,
@@ -70,7 +45,8 @@ class UserController{
             data: {
               name: res.name,
               email: res.email,
-              avatar: res.avatar
+              avatar: res.avatar,
+              token: token
             }
           }
         } else {

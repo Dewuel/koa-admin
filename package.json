@@ -14,10 +14,13 @@
   "repository": "https://gitee.com/jarvanzx/koa-admin.git",
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^8.5.1",
     "koa": "^2.7.0",
     "koa-bodyparser": "^4.2.1",
     "koa-json": "^2.0.2",
+    "koa-jwt": "^3.6.0",
     "koa-router": "^7.4.0",
+    "koa2-cors": "^2.0.6",
     "mongoose": "^5.6.7"
   }
 }
