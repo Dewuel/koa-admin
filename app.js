@@ -16,7 +16,7 @@ const port = process.env.PORT || config.port;
 app.use(bodyParser()).use(json())
 mongoose.connect(config.mongodbURI, {
   useNewUrlParser: true,
-  
+  useCreateIndex: true
 }).then(() => {
   console.log('mongodb is connected!');
 }).catch(err => {
