@@ -4,10 +4,10 @@ const checkToken = require('../utils/checkToken')
 class Todos {
 
   static async addTodo(ctx) {
-    const { todo, token } = ctx.request.body
-    // const auth = ctx.request.header.authorization;
-    if (token) {
-      let decode = checkToken(token)
+    const { todo } = ctx.request.body
+    const auth = ctx.request.header.authorization;
+    if (auth) {
+      let decode = checkToken(auth)
       console.log(decode)
       let newTodo = new Todo({
         todo: todo,
@@ -23,9 +23,9 @@ class Todos {
       }
     } else {
       console.log('token 不存在')
-      ctx.status = 404
+      ctx.status = 401
       ctx.body = {
-        code: 404,
+        code: 401,
         msg: 'token 不存在'
       }
     }

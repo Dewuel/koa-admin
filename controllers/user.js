@@ -10,8 +10,7 @@ class UserController{
    static async signup(ctx) {
     const {email,name,password,avatar} = ctx.request.body
     console.log(email,name,password,avatar);
-    await User.create({email,name,password,avatar}).then(res => {
-      // console.log('res',res)
+    await User.create({email,name,password,avatar}).then((res) => {
       ctx.status = 200
       ctx.body = {
         code: 200,
