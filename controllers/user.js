@@ -2,16 +2,16 @@ const User = require('../models/user')
 const addToken = require('../utils/addToken')
 const checkToken = require('../utils/checkToken')
 
-class UserController{
+class UserController {
   /**
    * 
    * @param {*} ctx 
    * @returns {Promise.<void>}
    */
-   static async signup(ctx) {
-    const {email,name,password,avatar} = ctx.request.body
-    console.log(email,name,password,avatar);
-    await User.create({email,name,password,avatar}).then((res) => {
+  static async signup(ctx,next) {
+    const { email, name, password, avatar } = ctx.request.body
+    console.log(email, name, password, avatar);
+    await User.create({ email, name, password, avatar }).then((res) => {
       ctx.status = 200
       ctx.body = {
         code: 200,
@@ -22,21 +22,22 @@ class UserController{
       console.log(err)
       ctx.status = 512
       ctx.body = {
-        code: 11000,
+        code: 512,
         msg: '邮箱已被占用',
         data: err
       }
     })
+    await next()
   }
 
-  static async signin(ctx){
-    const {email,password} = ctx.request.body
-    await User.findOne({email}, (err, res) => {
-      if(err) throw(err)
+  static async signin(ctx,next) {
+    const { email, password } = ctx.request.body
+    await User.findOne({ email }, (err, res) => {
+      if (err) throw err
       // User.comparePassword
       res.comparePassword(password, (err, isMatch) => {
-        if(err) throw err
-        if(isMatch){
+        if (err) throw err
+        if (isMatch) {
           let token = addToken(res)
           ctx.status = 200
           ctx.body = {
@@ -58,30 +59,39 @@ class UserController{
         }
       })
     })
-    console.log(res)
+  await next()
   }
 
-  static async getUser(ctx){
+  static async getUser(ctx, next) {
     const auth = ctx.request.header.authorization;
-    let decode = checkToken(auth)
-    try {
-      await User.findById(decode.id, (err, res) => {
-        if(err) throw err
-        ctx.status = 200
+    if (auth) {
+      let decode = checkToken(auth)
+      try {
+        await User.findById(decode.id, (err, res) => {
+          if (err) throw err
+          ctx.status = 200
+          ctx.body = {
+            code: 200,
+            msg: '获取成功',
+            data: res
+          }
+        })
+      } catch (err) {
+        ctx.status = 408
         ctx.body = {
-          code: 200,
-          msg: '获取成功',
-          data: res
+          code: 408,
+          msg: '请重新登录',
+          data: err
         }
-      })
-    } catch (err) {
-      ctx.status = 408
+      }
+    } else {
+      ctx.status = 404
       ctx.body = {
-        code: 408,
-        msg: '请重新登录',
-        data: err
+        code: 404,
+        msg: 'token不存在'
       }
     }
+    await next()
   }
 }
 module.exports = UserController

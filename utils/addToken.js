@@ -5,6 +5,6 @@ module.exports = (userinfo) => {
   const token = jwt.sign({
     name: userinfo.name,
     id: userinfo._id,
-  }, config.secret, {expiresIn: '1h'});
+  }, config.secret, { expiresIn: '1h' });
   return token;
 };
