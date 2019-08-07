@@ -1,5 +1,6 @@
 const User = require('../models/user')
 const addToken = require('../utils/addToken')
+const checkToken = require('../utils/checkToken')
 
 class UserController{
   /**
@@ -58,6 +59,29 @@ class UserController{
       })
     })
     console.log(res)
+  }
+
+  static async getUser(ctx){
+    const auth = ctx.request.header.authorization;
+    let decode = checkToken(auth)
+    try {
+      await User.findById(decode.id, (err, res) => {
+        if(err) throw err
+        ctx.status = 200
+        ctx.body = {
+          code: 200,
+          msg: '获取成功',
+          data: res
+        }
+      })
+    } catch (err) {
+      ctx.status = 408
+      ctx.body = {
+        code: 408,
+        msg: '请重新登录',
+        data: err
+      }
+    }
   }
 }
 module.exports = UserController

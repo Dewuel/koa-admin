@@ -43,7 +43,7 @@ class Todos {
     const auth = ctx.request.header.authorization
     if(auth){
       let decode = checkToken(auth)
-      if(decode !== uid) return;
+      if(decode.id !== uid) return;
       try {
         await Todo.findByIdAndRemove({_id: id}, (err) => {
           if (err) throw err;
@@ -76,7 +76,7 @@ class Todos {
       let decode = checkToken(auth)
       if(decode !== id) return;
       try {
-        await Todo.find({userId: decode},(err, res) => {
+        await Todo.find({userId: decode.id},(err, res) => {
           if(err) throw err;
           ctx.status = 200
           ctx.body = {
@@ -105,7 +105,7 @@ class Todos {
     const auth = ctx.request.header.authorization
     if(auth){
       let decode = checkToken(auth)
-      if(uid!==decode) return;
+      if(uid!==decode.id) return;
       try {
         await Todo.findByIdAndUpdate(id,{todo: todo},(err, res) => {
           if(err) throw err;
